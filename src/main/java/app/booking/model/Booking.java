@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -35,9 +36,14 @@ public class Booking {
     private LocalDateTime endAt;
 
     @Column(nullable = false)
+    private BigDecimal totalPrice;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+
 }
