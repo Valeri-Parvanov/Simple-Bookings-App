@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout}">
+<head>
+    <title>User Details - Simple Bookings</title>
+</head>
+<body>
+    <main class="container my-4">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>User Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <p><strong>Username:</strong> <span th:text="${user.username}">username</span></p>
+                            <p><strong>Email:</strong> <span th:text="${user.email}">email</span></p>
+                            <p><strong>Role:</strong> 
+                                <span th:if="${user.role == 'ADMIN'}" class="badge bg-danger">Admin</span>
+                                <span th:if="${user.role == 'USER'}" class="badge bg-primary">User</span>
+                            </p>
+                            <p><strong>Status:</strong> 
+                                <span th:if="${user.status == 'ACTIVE'}" class="badge bg-success">Active</span>
+                                <span th:if="${user.status == 'BLOCKED'}" class="badge bg-secondary">Blocked</span>
+                            </p>
+                            <p><strong>Created:</strong> <span th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}">date</span></p>
+                        </div>
+
+                        <div class="mt-4">
+                            <h5>Change Role</h5>
+                            <form th:action="@{/admin/users/{id}/change-role(id=${user.id})}" method="post" class="mb-3">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <div class="input-group">
+                                    <select name="newRole" class="form-select">
+                                        <option value="USER" th:selected="${user.role == 'USER'}">User</option>
+                                        <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">Admin</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-warning">Change Role</button>
+                                </div>
+                            </form>
+
+                            <h5>Manage Status</h5>
+                            <form th:if="${user.status == 'ACTIVE'}" 
+                                  th:action="@{/admin/users/{id}/block(id=${user.id})}" 
+                                  method="post" 
+                                  class="d-inline">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to block this user?')">Block User</button>
+                            </form>
+                            <form th:if="${user.status == 'BLOCKED'}" 
+                                  th:action="@{/admin/users/{id}/unblock(id=${user.id})}" 
+                                  method="post" 
+                                  class="d-inline">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-success">Unblock User</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+

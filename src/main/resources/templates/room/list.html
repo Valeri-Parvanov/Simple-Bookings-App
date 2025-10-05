@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout :: head('Rooms')}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container my-0" style="overflow-x: hidden; padding-top: 0.5rem;">
+        <div th:replace="~{layout :: alerts}"></div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <h2 class="mb-0" style="font-size: 1.6rem;">Available Rooms</h2>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/rooms/create}" class="btn btn-primary btn-sm">Create Room</a>
+        </div>
+
+        <div class="row" th:if="${rooms != null && !rooms.isEmpty()}">
+            <div class="col-md-6 col-lg-4 mb-2" th:each="room, iterStat : ${rooms}">
+                <div class="card h-100">
+                    <div class="image-container">
+                        <img th:with="roomNameLower=${#strings.toLowerCase(room.name)}, imageName=${roomNameLower.contains('twin') ? 'twin-room-main' : roomNameLower.contains('luxury') || roomNameLower.contains('executive') ? 'luxury-suite-main' : roomNameLower.contains('single') || roomNameLower.contains('deluxe') ? 'single-room-main' : roomNameLower.contains('ocean') ? 'ocean-view-suite-main' : 'conference-hall-main'}"
+                             th:src="${'/images/rooms/' + imageName + '.jpg'}" 
+                             th:alt="${room.name}" 
+                             class="room-card-image"
+                             loading="lazy"
+                             onerror="this.src='/images/rooms/conference-hall-main.jpg'; this.onerror=null;">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${room.name}">Room Name</h5>
+                        <p class="card-text mb-0">
+                            <i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>Location:</strong> <span th:text="${room.location}">location</span><br>
+                            <i class="fas fa-users me-2 text-primary"></i><strong>Capacity:</strong> <span th:text="${room.capacity}">capacity</span> people<br>
+                            <i class="fas fa-money-bill-wave me-2 text-primary"></i><strong>Price:</strong> <span th:text="${#numbers.formatDecimal(room.basePricePerHour, 0, 2)}">0.00</span> BGN/hour
+                        </p>
+                        <a th:href="@{/rooms/{id}(id=${room.id})}" class="btn btn-primary w-100 btn-sm mt-1" style="padding: 0.35rem 0.9rem; font-size: 0.85rem;">
+                            <i class="fas fa-eye me-2"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${rooms == null || rooms.isEmpty()}" class="alert alert-info">
+            <p>No rooms available at the moment.</p>
+        </div>
+
+        <div sec:authorize="hasRole('ADMIN')" class="mt-1">
+            <a th:href="@{/rooms/admin/all}" class="btn btn-secondary btn-sm">View All Rooms (Admin)</a>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <script th:replace="~{layout :: scripts}"></script>
+</body>
+</html>

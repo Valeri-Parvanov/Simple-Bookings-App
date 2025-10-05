@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout :: head(${room.name})}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    
+    <main class="container my-4">
+        <div th:replace="~{layout :: alerts}"></div>
+        
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="image-container room-main-image-container">
+                    <img th:with="roomNameLower=${#strings.toLowerCase(room.name)}, imageName=${roomNameLower.contains('twin') ? 'twin-room-main' : roomNameLower.contains('luxury') || roomNameLower.contains('executive') ? 'luxury-suite-main' : roomNameLower.contains('single') || roomNameLower.contains('deluxe') ? 'single-room-main' : roomNameLower.contains('ocean') ? 'ocean-view-suite-main' : 'conference-hall-main'}"
+                         th:src="${'/images/rooms/' + imageName + '.jpg'}" 
+                         th:alt="${room.name}" 
+                         class="room-detail-image"
+                         loading="eager"
+                         onerror="this.src='/images/rooms/conference-hall-main.jpg'; this.onerror=null;">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 th:text="${room.name}"><i class="fas fa-door-open me-2"></i>Room Name</h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${room.description != null && !room.description.isEmpty()}" class="mb-4">
+                            <p class="lead" th:text="${room.description}">Room Description</p>
+                        </div>
+                        <div class="mb-4">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>Location:</strong> <span th:text="${room.location}">location</span></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><i class="fas fa-users me-2 text-primary"></i><strong>Capacity:</strong> <span th:text="${room.capacity}">capacity</span> people</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><i class="fas fa-money-bill-wave me-2 text-primary"></i><strong>Price per hour:</strong> <span th:text="${#numbers.formatDecimal(room.basePricePerHour, 0, 2)}">0.00</span> BGN</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Status:</strong> 
+                                        <span th:if="${room.visible}" class="badge bg-success">Visible</span>
+                                        <span th:if="${!room.visible}" class="badge bg-secondary">Hidden</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <p><i class="fas fa-calendar me-2 text-primary"></i><strong>Created:</strong> <span th:text="${#temporals.format(room.createdAt, 'yyyy-MM-dd HH:mm')}">date</span></p>
+                        </div>
+
+                        <div class="room-gallery mb-4">
+                            <h5 class="mb-3"><i class="fas fa-images me-2"></i>Gallery</h5>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="gallery-thumbnail" onclick="openImageModal('/images/rooms/conference-hall-main.jpg')">
+                                        <img src="/images/rooms/conference-hall-main.jpg" alt="Conference Room" loading="lazy" onerror="this.style.display='none';">
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="gallery-thumbnail" onclick="openImageModal('/images/rooms/luxury-suite-main.jpg')">
+                                        <img src="/images/rooms/luxury-suite-main.jpg" alt="Luxury Room" loading="lazy" onerror="this.style.display='none';">
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="gallery-thumbnail" onclick="openImageModal('/images/rooms/single-room-main.jpg')">
+                                        <img src="/images/rooms/single-room-main.jpg" alt="Single Room" loading="lazy" onerror="this.style.display='none';">
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="gallery-thumbnail" onclick="openImageModal('/images/rooms/twin-room-main.jpg')">
+                                        <img src="/images/rooms/twin-room-main.jpg" alt="Twin Room" loading="lazy" onerror="this.style.display='none';">
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="gallery-thumbnail" onclick="openImageModal('/images/rooms/ocean-view-suite-main.jpg')">
+                                        <img src="/images/rooms/ocean-view-suite-main.jpg" alt="Ocean View Room" loading="lazy" onerror="this.style.display='none';">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div sec:authorize="isAuthenticated()" class="mb-3">
+                            <a th:href="@{/bookings/create?roomId={id}(id=${room.id})}" class="btn btn-primary">Book This Room</a>
+                        </div>
+
+                        <div sec:authorize="hasRole('ADMIN')" class="mt-4">
+                            <hr>
+                            <h5>Admin Actions</h5>
+                            <a th:href="@{/rooms/{id}/edit(id=${room.id})}" class="btn btn-warning">Edit</a>
+                            <form th:action="@{/rooms/{id}/toggle-visibility(id=${room.id})}" method="post" class="d-inline">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-secondary" th:text="${room.visible ? 'Hide' : 'Show'}">Toggle Visibility</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 d-flex align-items-center justify-content-center">
+                    <img id="modalImage" src="" alt="Room Image" class="modal-fullscreen-image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <script th:replace="~{layout :: scripts}"></script>
+    <script>
+        function openImageModal(imageSrc) {
+            document.getElementById('modalImage').src = imageSrc;
+            var modal = new bootstrap.Modal(document.getElementById('imageModal'));
+            modal.show();
+        }
+    </script>
+</body>
+</html>
+

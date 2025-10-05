@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PromoCodeRepository extends JpaRepository<PromoCode, UUID> {
+    Optional<PromoCode> findByCode(String code);
     Optional<PromoCode> findByCodeAndActiveTrueAndValidFromBeforeAndValidToAfter(String code, LocalDateTime from, LocalDateTime to);
-    boolean existByCode(String code);
+    boolean existsByCode(String code);
 }

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout}">
+<head>
+    <title>Edit Room - Simple Bookings</title>
+</head>
+<body>
+    <main class="container my-4">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Edit Room</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/rooms/{id}/edit(id=${roomId})}" th:object="${updateRequest}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Room Name</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="name" 
+                                       th:field="*{name}"
+                                       required>
+                                <div th:if="${#fields.hasErrors('name')}" class="text-danger">
+                                    <span th:errors="*{name}">Name error</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="location" 
+                                       th:field="*{location}"
+                                       required>
+                                <div th:if="${#fields.hasErrors('location')}" class="text-danger">
+                                    <span th:errors="*{location}">Location error</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="capacity" class="form-label">Capacity</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="capacity" 
+                                       th:field="*{capacity}"
+                                       min="1"
+                                       required>
+                                <div th:if="${#fields.hasErrors('capacity')}" class="text-danger">
+                                    <span th:errors="*{capacity}">Capacity error</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="basePricePerHour" class="form-label">Base Price Per Hour (BGN)</label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="basePricePerHour" 
+                                       th:field="*{basePricePerHour}"
+                                       step="0.01"
+                                       min="0.01"
+                                       required>
+                                <div th:if="${#fields.hasErrors('basePricePerHour')}" class="text-danger">
+                                    <span th:errors="*{basePricePerHour}">Price error</span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/rooms/{id}(id=${roomId})}" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Update Room</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout}">
+<head>
+    <title>Admin Dashboard - Simple Bookings</title>
+</head>
+<body>
+    <main class="container my-4">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <h2>Admin Dashboard</h2>
+        
+        <div class="row mt-4">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Users Management</h5>
+                        <p class="card-text">Manage users, roles, and user statuses.</p>
+                        <a th:href="@{/admin/users}" class="btn btn-primary">Manage Users</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Rooms Management</h5>
+                        <p class="card-text">Create, edit, and manage rooms.</p>
+                        <a th:href="@{/rooms/admin/all}" class="btn btn-primary">Manage Rooms</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Promo Codes</h5>
+                        <p class="card-text">Create and manage promo codes.</p>
+                        <a th:href="@{/promocodes}" class="btn btn-primary">Manage Promo Codes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+

@@ -41,6 +41,9 @@ public class Room {
     @Column(nullable = false)
     private BigDecimal basePricePerHour;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Column(nullable = false)
     private boolean visible;
 
@@ -48,5 +51,7 @@ public class Room {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "room")
+    @Builder.Default
     private List<Booking> bookings = new ArrayList<>();
+
 }

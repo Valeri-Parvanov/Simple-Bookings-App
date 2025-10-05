@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout :: head('Home')}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container my-2" style="overflow-x: hidden;">
+        <div th:replace="~{layout :: alerts}"></div>
+        
+        <div class="jumbotron text-white p-3 rounded mb-3 position-relative overflow-hidden">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4">Welcome to Simple Bookings</h1>
+                    <p class="lead">Book your perfect room for your next event or meeting</p>
+                    <hr class="my-2" style="border-color: rgba(255,255,255,0.3);">
+                    <p class="mb-2" style="font-size: 0.9rem;">Browse our available rooms and make a reservation today!</p>
+                    <a class="btn btn-light" th:href="@{/rooms}" role="button">View Rooms</a>
+                </div>
+                <div class="col-lg-6 mt-3 mt-lg-0">
+                    <div class="hero-image-container">
+                        <img src="/images/rooms/conference-hall-main.jpg" alt="Modern Conference Room" class="hero-image" onerror="this.style.display='none';">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+                <div class="col-md-4 mb-2">
+                <div class="card h-100">
+                    <div class="image-container">
+                        <img src="/images/rooms/single-room-main.jpg" alt="Easy Booking" class="room-card-image" loading="lazy" onerror="this.style.display='none';">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-calendar-check me-2"></i>Easy Booking</h5>
+                        <p class="card-text">Simple and intuitive booking process. Find your perfect room in minutes.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <div class="card h-100">
+                    <div class="image-container">
+                        <img src="/images/rooms/twin-room-main.jpg" alt="Manage Bookings" class="room-card-image" loading="lazy" onerror="this.style.display='none';">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-calendar-alt me-2"></i>Manage Bookings</h5>
+                        <p class="card-text">View and manage all your bookings from one convenient location.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <div class="card h-100">
+                    <div class="image-container">
+                        <img src="/images/rooms/luxury-suite-main.jpg" alt="Premium Rooms" class="room-card-image" loading="lazy" onerror="this.style.display='none';">
+                        <div class="image-overlay"></div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-crown me-2"></i>Premium Rooms</h5>
+                        <p class="card-text">Discover our premium rooms with luxury amenities and special features.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <script th:replace="~{layout :: scripts}"></script>
+</body>
+</html>

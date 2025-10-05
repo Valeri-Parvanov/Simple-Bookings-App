@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout :: head('Error')}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    
+    <main class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h3 class="mb-0" th:text="${errorTitle != null ? errorTitle : 'Error'}">Error</h3>
+                    </div>
+                    <div class="card-body text-center">
+                        <h1 class="display-1" th:text="${statusCode != null ? statusCode : '500'}">500</h1>
+                        <p class="lead" th:text="${errorMessage != null ? errorMessage : 'An error occurred'}">An error occurred</p>
+                        
+                        <div th:if="${validationErrors != null}" class="mt-4">
+                            <h5>Validation Errors:</h5>
+                            <ul class="list-unstyled text-start">
+                                <li th:each="error : ${validationErrors}">
+                                    <span th:text="${error.key + ': ' + error.value}">Error</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-4">
+                            <a th:href="@{/}" class="btn btn-primary">Go to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <script th:replace="~{layout :: scripts}"></script>
+</body>
+</html>
+

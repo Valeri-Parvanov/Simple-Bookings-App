@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout}">
+<head>
+    <title>All Rooms - Simple Bookings</title>
+</head>
+<body>
+    <main class="container my-4">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>All Rooms (Admin View)</h2>
+            <a th:href="@{/rooms/create}" class="btn btn-primary">Create Room</a>
+        </div>
+
+        <div class="row" th:if="${rooms != null && !rooms.isEmpty()}">
+            <div class="col-md-6 col-lg-4 mb-4" th:each="room : ${rooms}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${room.name}">Room Name</h5>
+                        <p class="card-text">
+                            <strong>Location:</strong> <span th:text="${room.location}">location</span><br>
+                            <strong>Capacity:</strong> <span th:text="${room.capacity}">capacity</span> people<br>
+                            <strong>Price:</strong> <span th:text="${#numbers.formatDecimal(room.basePricePerHour, 0, 2)}">0.00</span> BGN/hour<br>
+                            <strong>Status:</strong> 
+                                <span th:if="${room.visible}" class="badge bg-success">Visible</span>
+                                <span th:if="${!room.visible}" class="badge bg-secondary">Hidden</span>
+                        </p>
+                        <a th:href="@{/rooms/{id}(id=${room.id})}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${rooms == null || rooms.isEmpty()}" class="alert alert-info">
+            <p>No rooms available.</p>
+        </div>
+    </main>
+</body>
+</html>
+

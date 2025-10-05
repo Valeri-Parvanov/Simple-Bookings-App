@@ -34,7 +34,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
-    //може да се наложи да премахна nullable = false в даден момент от проекта
     @Column(nullable = false, unique = true)
     private String email;
 

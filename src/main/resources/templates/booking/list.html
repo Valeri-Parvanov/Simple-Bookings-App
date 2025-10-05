@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout :: head('My Bookings')}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container my-4">
+        <div th:replace="~{layout :: alerts}"></div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>My Bookings</h2>
+            <a th:href="@{/bookings/create}" class="btn btn-primary">New Booking</a>
+        </div>
+
+        <div th:if="${bookings != null && !bookings.isEmpty()}">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Location</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="booking : ${bookings}">
+                            <td th:text="${booking.roomName}">Room Name</td>
+                            <td th:text="${booking.roomLocation}">Location</td>
+                            <td th:text="${#temporals.format(booking.startAt, 'yyyy-MM-dd HH:mm')}">Start</td>
+                            <td th:text="${#temporals.format(booking.endAt, 'yyyy-MM-dd HH:mm')}">End</td>
+                            <td>
+                                <span th:text="${#numbers.formatDecimal(booking.totalPrice, 0, 2)}">0.00</span> BGN
+                                <span th:if="${booking.discountAmount != null && booking.discountAmount > 0}" 
+                                      class="text-success">
+                                    (Discount: <span th:text="${#numbers.formatDecimal(booking.discountAmount, 0, 2)}">0.00</span> BGN)
+                                </span>
+                            </td>
+                            <td>
+                                <span th:if="${booking.status == 'PENDING'}" class="badge bg-warning">Pending</span>
+                                <span th:if="${booking.status == 'CONFIRMED'}" class="badge bg-success">Confirmed</span>
+                                <span th:if="${booking.status == 'CANCELED'}" class="badge bg-secondary">Canceled</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/bookings/{id}(id=${booking.id})}" class="btn btn-sm btn-info">View</a>
+                                <span th:if="${booking.status != 'CANCELED'}">
+                                    <a th:href="@{/bookings/{id}/edit(id=${booking.id})}" class="btn btn-sm btn-warning">Edit</a>
+                                    <form th:action="@{/bookings/{id}/cancel(id=${booking.id})}" method="post" class="d-inline">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel</button>
+                                    </form>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:if="${bookings == null || bookings.isEmpty()}" class="alert alert-info">
+            <p>You don't have any bookings yet.</p>
+            <a th:href="@{/bookings/create}" class="btn btn-primary">Make Your First Booking</a>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <script th:replace="~{layout :: scripts}"></script>
+</body>
+</html>
+

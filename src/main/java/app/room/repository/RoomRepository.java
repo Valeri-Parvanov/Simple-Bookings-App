@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, UUID> {
     boolean existsByName(String name);
-    List<Room> findAllByVisibleTrue();
+    List<Room> findAllByVisibleTrueOrderByNameAsc();
 }

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout}">
+<head>
+    <title>Users Management - Simple Bookings</title>
+</head>
+<body>
+    <main class="container my-4">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <h2>Users Management</h2>
+
+        <div th:if="${users != null && !users.isEmpty()}">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.username}">username</td>
+                            <td th:text="${user.email}">email</td>
+                            <td>
+                                <span th:if="${user.role == 'ADMIN'}" class="badge bg-danger">Admin</span>
+                                <span th:if="${user.role == 'USER'}" class="badge bg-primary">User</span>
+                            </td>
+                            <td>
+                                <span th:if="${user.status == 'ACTIVE'}" class="badge bg-success">Active</span>
+                                <span th:if="${user.status == 'BLOCKED'}" class="badge bg-secondary">Blocked</span>
+                            </td>
+                            <td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}">date</td>
+                            <td>
+                                <a th:href="@{/admin/users/{id}(id=${user.id})}" class="btn btn-sm btn-info">View</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:if="${users == null || users.isEmpty()}" class="alert alert-info">
+            <p>No users found.</p>
+        </div>
+    </main>
+</body>
+</html>
+

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:replace="~{layout}">
+<head>
+    <title>Edit Booking - Simple Bookings</title>
+</head>
+<body>
+    <main class="container my-4">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Edit Booking</h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/bookings/{id}/edit(id=${bookingId})}" th:object="${updateRequest}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            
+                            <div class="mb-3">
+                                <label for="startAt" class="form-label">Start Time</label>
+                                <input type="datetime-local" 
+                                       class="form-control" 
+                                       id="startAt" 
+                                       th:field="*{startAt}"
+                                       required>
+                                <div th:if="${#fields.hasErrors('startAt')}" class="text-danger">
+                                    <span th:errors="*{startAt}">Start time error</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="endAt" class="form-label">End Time</label>
+                                <input type="datetime-local" 
+                                       class="form-control" 
+                                       id="endAt" 
+                                       th:field="*{endAt}"
+                                       required>
+                                <div th:if="${#fields.hasErrors('endAt')}" class="text-danger">
+                                    <span th:errors="*{endAt}">End time error</span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/bookings/{id}(id=${bookingId})}" class="btn btn-secondary">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Update Booking</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+
