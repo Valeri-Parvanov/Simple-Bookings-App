@@ -49,4 +49,5 @@ public class Room {
 
     @OneToMany(mappedBy = "room")
     private List<Booking> bookings = new ArrayList<>();
+
 }
